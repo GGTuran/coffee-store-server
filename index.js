@@ -19,7 +19,7 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.vddbb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 
-// console.log(uri)
+console.log(uri);
 
 
 
@@ -38,6 +38,7 @@ async function run() {
     await client.connect();
 
     const coffeeCollection = client.db('coffeeDB').collection('coffee');
+    const userCollection = client.db('coffeeDB').collection('user');
 
     app.get('/coffee', async(req, res)=>{
         const cursor = coffeeCollection.find()
@@ -84,6 +85,16 @@ async function run() {
         const query = {_id: new ObjectId(id)}
         const result = await coffeeCollection.deleteOne(query);
         res.send(result);
+    })
+
+
+    // user related apis
+
+    app.post('/user', async (req, res) =>{
+      const user = req.body;
+      console.log(user);
+      const result = await userCollection.insertOne(user);
+      res.send(result);
     })
 
 
